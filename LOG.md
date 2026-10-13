@@ -18,3 +18,15 @@ Navigator: Dorian
 - Made playerdeck class
 - Made Carddeck class
 - Worked on game init
+
+# 13/10/2026
+Session duration: 1.5 hours
+
+Driver: Dorian
+Navigator: Andrew
+
+- Implement PlayerDeck add and remove card methods
+- Implement TableDeck draw and discard methods
+- Extra methods for CardDeck
+- Finish game initialisation
+- Implement player behaviour for drawing from a deck and discarding to a deck

@@ -14,6 +14,14 @@ public class CardDeck {
         Collections.shuffle(cards);
     }
 
+    public Card drawCard() {
+        return cards.remove(0);
+    }
+
+    public int getDeckSize() {
+        return cards.size();
+    }
+
     public void printCards() {
         System.out.println(cards);
     }

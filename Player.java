@@ -1,21 +1,22 @@
 public class Player {
     private int playerNumber;
-    private Card[] playerDeck;
-    private CardDeck leftDeck;
-    private CardDeck rightDeck;
-    private int discardedCardIndex;
+    private PlayerDeck playerDeck;
+    private TableDeck drawDeck;
+    private TableDeck discardDeck;
 
     public Player(int playerNumber) {
         this.playerNumber = playerNumber;
     }
 
     public void drawCard() {
-        // Card card = leftDeck.draw();
+        Card card = drawDeck.drawCard();
+        playerDeck.addCard(card);
     }
 
 
-    public void discardCard(Card card) {
-
+    public void discardCard() {
+        Card card = playerDeck.removeCard(playerNumber);
+        discardDeck.discardCard(card);
     }
 
 }

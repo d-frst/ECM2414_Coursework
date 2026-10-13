@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CardGame {
     private int numPlayers;
     private ArrayList<Player> players = new ArrayList<Player>();
@@ -8,6 +10,7 @@ public class CardGame {
     }
 
     public void initGame() {
-        createDeck
+        CardDeck deck = new CardDeck();
+        deck.createDeck(numPlayers);
     }
 }

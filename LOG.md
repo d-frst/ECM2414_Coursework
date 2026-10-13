@@ -10,10 +10,11 @@ Navigator: Andrew
 - basic class scaffolding
 
 # 12/10/2026
-Session duration: x hour(s)
+Session duration: 1.5 hours
 
 Driver: Andrew
 Navigator: Dorian
 
-16:30 start
-- 
+- Made playerdeck class
+- Made Carddeck class
+- Worked on game init

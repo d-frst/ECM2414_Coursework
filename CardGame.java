@@ -14,6 +14,8 @@ public class CardGame {
         CardDeck deck = new CardDeck();
         deck.createDeck(numPlayers);
 
+        // generate cards
+
         // generate players
         for (int i = 0; i < numPlayers; i++) {
             players.add(new Player(i + 1));

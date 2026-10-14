@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+// TODO: output hand when game ends
 public class PlayerDeck {
     private ArrayList<Card> cards = new ArrayList<Card>();
 
@@ -28,7 +29,21 @@ public class PlayerDeck {
         return nonPreferredCards.get(r.nextInt(nonPreferredCards.size()));
     }
 
+    public boolean cardsMatch() {
+        int valueToCheck = cards.get(0).getValue();
+        int matching = 0;
+        for (Card card : cards) {
+            if (card.getValue() == valueToCheck) {
+                matching++;
+            }
+        }
+
+        return matching == 4;
+    }
+
     public void printCards() {
-        System.out.println(cards);
+        for (Card card : cards) {
+            System.out.println(card.getValue());
+        }
     }
 }

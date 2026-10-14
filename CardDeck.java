@@ -21,11 +21,11 @@ public class CardDeck {
     public void generateCardFile(int numPlayers) {
         // Open file
         try (FileWriter myWriter = new FileWriter("cards.txt", true)) {
-            createDeck(numPlayers)
+            createDeck(numPlayers);
             for (int i = 0 ; i < cards.size(); i++) {
                 Card currentCard = cards.get(i);
                 int cardNumber = currentCard.getValue();
-                String cardValue = "%d\n";
+                String cardValue = (i != cards.size() - 1) ? "%d\n" : "%d";
                 String formattedValue = String.format(cardValue, cardNumber);
                 myWriter.write(formattedValue);
             }

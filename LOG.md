@@ -39,3 +39,12 @@ Navigator: Dorian
 
 - made generate card file and read card file functions
 - started work on player log
+
+# 14/10/2026 start(3:50)
+Session duration: 1 hour 15 mins
+
+Driver: Dorian
+Navigator: Andrew
+
+- Implemented sequential prototype for card game
+- Started implementation on file output for players

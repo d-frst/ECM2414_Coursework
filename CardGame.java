@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.IOException;
 
 public class CardGame {
     private int numPlayers;
@@ -7,18 +8,25 @@ public class CardGame {
     
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
-        initGame();
+        int result = initGame();
+        System.out.println(result);
     }
 
-    public void initGame() {
+    public int initGame() {
         CardDeck deck = new CardDeck();
 
         // generate cards
-        deck.readCardFile();
+        deck.readCardFile(numPlayers);
 
         // generate players
         for (int i = 0; i < numPlayers; i++) {
-            players.add(new Player(i + 1));
+            try {
+                players.add(new Player(i + 1));    
+            } catch (IOException e) {
+                System.out.println("Error creating a new player");
+                return -1;
+            }
+            
         }
 
         // distribute cards to players
@@ -31,7 +39,7 @@ public class CardGame {
 
         // generate TableDecks
         for (int i = 0; i < numPlayers; i++) {
-            tableDecks.add(new TableDeck());
+            tableDecks.add(new TableDeck(i + 1));
         }
 
         // add cards to table decks
@@ -50,5 +58,41 @@ public class CardGame {
             player.setDrawDeck(drawDeck);
             player.setDiscardDeck(discardDeck);
         }
+
+        return 0;
+    }
+
+    public void play() throws IOException {
+        boolean anyPlayerWon = false;
+        int currentPlayerNumber = 0;
+
+        while (anyPlayerWon == false) {
+            Player currentPlayer = players.get(currentPlayerNumber);
+            anyPlayerWon = currentPlayer.play();
+            currentPlayerNumber = (currentPlayerNumber + 1) % numPlayers;
+        }
+
+        for (Player player : players) {
+            player.writeOutput();
+        }
+    }
+
+    public void debugPrint() {
+        for (Player player : players) {
+            System.out.println("player %d deck".formatted(player.getPlayerNumber()));
+            player.printPlayerDeck();
+        }
+        for (TableDeck deck : tableDecks) {
+            System.out.println("table deck");
+            deck.printCards();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        CardDeck deck = new CardDeck();
+        deck.generateCardFile(2);
+        CardGame game = new CardGame(2);
+        game.play();
+        game.debugPrint();
     }
 }

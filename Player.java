@@ -1,14 +1,14 @@
-// TODO: add checks for winning conditions
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// TODO: finish up player output (initial hand, final hand), make players threaded
+
 public class Player {
     private int playerNumber;
     private PlayerDeck playerDeck = new PlayerDeck();
-    private TableDeck drawDeck = new TableDeck();
-    private TableDeck discardDeck = new TableDeck();
+    private TableDeck drawDeck;
+    private TableDeck discardDeck;
     private File playerActionsFile;
     FileWriter playerWriter;
 
@@ -16,7 +16,6 @@ public class Player {
         this.playerNumber = playerNumber;
         String filename = "player%d_output.txt".formatted(playerNumber);
         playerActionsFile = new File(filename);
-        
         playerWriter = new FileWriter(filename, true);
 
     }
@@ -30,15 +29,42 @@ public class Player {
         playerDeck.addCard(card);
     }
 
-    public void drawCard() {
+    public int drawCard() {
         Card card = drawDeck.drawCard();
         playerDeck.addCard(card);
+        return card.getValue();
     }
 
+    public boolean checkWin() {
+        return playerDeck.cardsMatch();
+    }
 
-    public void discardCard() {
+    public boolean play() throws IOException {
+        boolean won_1 = checkWin();
+
+        if (won_1) {
+            playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
+            return true;
+        }
+
+        int cardDrawn = drawCard();
+        int cardDiscarded = discardCard();
+        boolean won_2 = checkWin();
+        playerWriter.write("player %d draws a %d from deck %d\n".formatted(playerNumber, cardDrawn, drawDeck.getDeckNumber()));
+        playerWriter.write("player %d discards a %d to deck %d\n".formatted(playerNumber, cardDiscarded, discardDeck.getDeckNumber()));
+
+        if (won_2) {
+            playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
+            return true;
+        }
+
+        return false;
+    }
+
+    public int discardCard() {
         Card card = playerDeck.removeCard(playerNumber);
         discardDeck.discardCard(card);
+        return card.getValue();
     }
 
     public void setDrawDeck(TableDeck deck) {
@@ -49,8 +75,12 @@ public class Player {
         discardDeck = deck;
     }
 
-    public void writeToFile(String string){
+    public void printPlayerDeck() {
+        playerDeck.printCards();
+    }
 
+    public void writeOutput() throws IOException {
+        playerWriter.close();
     }
 
 }

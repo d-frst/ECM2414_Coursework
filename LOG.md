@@ -30,3 +30,12 @@ Navigator: Andrew
 - Extra methods for CardDeck
 - Finish game initialisation
 - Implement player behaviour for drawing from a deck and discarding to a deck
+
+# 14/10/2026 start(1:45)
+Session duration: 1.5 hours
+
+Driver: Andrew
+Navigator: Dorian
+
+- made generate card file and read card file functions
+- started work on player log

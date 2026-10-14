@@ -12,9 +12,9 @@ public class CardGame {
 
     public void initGame() {
         CardDeck deck = new CardDeck();
-        deck.createDeck(numPlayers);
 
         // generate cards
+        deck.readCardFile();
 
         // generate players
         for (int i = 0; i < numPlayers; i++) {

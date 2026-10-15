@@ -57,4 +57,14 @@ Navigator: Dorian
 
 - Started implementing threads
 
+# 15/10/2026
+Session duration: 2 hours
+
+Driver: Dorian
+Navigator: Andrew
+
+- Implemented threading
+- Working on thread safety and correct end game behaviour
+
+
 

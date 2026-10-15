@@ -1,10 +1,15 @@
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.io.IOException;
 
 public class CardGame {
     private int numPlayers;
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private ArrayList<Thread> playerThreads = new ArrayList<Thread>();
     private ArrayList<TableDeck> tableDecks = new ArrayList<TableDeck>();
+    private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
+    private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
+
     
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
@@ -18,18 +23,23 @@ public class CardGame {
         // generate cards
         deck.readCardFile(numPlayers);
 
+
+        ArrayList<Player> players = new ArrayList<Player>();
+
+
         // generate players
         for (int i = 0; i < numPlayers; i++) {
             try {
-                players.add(new Player(i + 1));    
+                players.add(new Player(i + 1, anyPlayerWon, winningPlayerNumber));   
             } catch (IOException e) {
                 System.out.println("Error creating a new player");
                 return -1;
             }
             
         }
-
+        
         // distribute cards to players
+
         for (int i = 0; i < numPlayers * 4; i++) {
             int currentPlayerNumber = (i % numPlayers);
             Player currentPlayer = players.get(currentPlayerNumber);
@@ -58,41 +68,39 @@ public class CardGame {
             player.setDrawDeck(drawDeck);
             player.setDiscardDeck(discardDeck);
         }
+        
+        // Turn players into threads
+        for (Player player : players) {
+            Thread playerThread = new Thread(player);
+            playerThreads.add(playerThread);
+        }
 
         return 0;
     }
 
     public void play() throws IOException {
-        boolean anyPlayerWon = false;
-        int currentPlayerNumber = 0;
-
-        while (anyPlayerWon == false) {
-            Player currentPlayer = players.get(currentPlayerNumber);
-            anyPlayerWon = currentPlayer.play();
-            currentPlayerNumber = (currentPlayerNumber + 1) % numPlayers;
-        }
-
-        for (Player player : players) {
-            player.writeOutput();
+        // Start player threads
+        for (Thread thread : playerThreads) {
+            thread.start();
         }
     }
 
-    public void debugPrint() {
-        for (Player player : players) {
-            System.out.println("player %d deck".formatted(player.getPlayerNumber()));
-            player.printPlayerDeck();
-        }
-        for (TableDeck deck : tableDecks) {
-            System.out.println("table deck");
-            deck.printCards();
-        }
-    }
+    // public void debugPrint() {
+    //     for (Player player : playerThreads) {
+    //         System.out.println("player %d deck".formatted(player.getPlayerNumber()));
+    //         player.printPlayerDeck();
+    //     }
+    //     for (TableDeck deck : tableDecks) {
+    //         System.out.println("table deck");
+    //         deck.printCards();
+    //     }
+    // }
 
     public static void main(String[] args) throws IOException {
         CardDeck deck = new CardDeck();
         deck.generateCardFile(2);
         CardGame game = new CardGame(2);
         game.play();
-        game.debugPrint();
+        //game.debugPrint();
     }
 }

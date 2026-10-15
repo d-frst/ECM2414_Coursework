@@ -41,9 +41,11 @@ public class PlayerDeck {
         return matching == 4;
     }
 
-    public void printCards() {
+    public String printCards() {
+        String cardString = "";
         for (Card card : cards) {
-            System.out.println(card.getValue());
+            cardString += Integer.toString(card.getValue()) + " ";
         }
+        return cardString;
     }
 }

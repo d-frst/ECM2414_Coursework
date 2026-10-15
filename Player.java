@@ -1,23 +1,42 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
+import java.io.*;
 // TODO: finish up player output (initial hand, final hand), make players threaded
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Player {
+
+public class Player implements Runnable{
     private int playerNumber;
     private PlayerDeck playerDeck = new PlayerDeck();
     private TableDeck drawDeck;
     private TableDeck discardDeck;
     private File playerActionsFile;
     FileWriter playerWriter;
+    private AtomicBoolean anyPlayerWon;
+    private AtomicInteger winningPlayerNumber;
 
-    public Player(int playerNumber) throws IOException{
+    public Player(int playerNumber, AtomicBoolean anyPlayerWon, AtomicInteger winningPlayerNumber) throws IOException{
         this.playerNumber = playerNumber;
+        this.anyPlayerWon = anyPlayerWon;
+        this.winningPlayerNumber = winningPlayerNumber;
         String filename = "player%d_output.txt".formatted(playerNumber);
         playerActionsFile = new File(filename);
         playerWriter = new FileWriter(filename, true);
+    }
 
+    @Override 
+    public void run(){
+        try{writeStartingHand();}
+        catch(IOException e) {System.out.println(e);}
+        while (anyPlayerWon.get() == false) {
+            try {play();}
+            catch(IOException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    public void writeStartingHand() throws IOException {
+        playerWriter.write("player 1 initial hand %s".formatted(playerDeck.printCards()));
     }
 
     public int getPlayerNumber() {
@@ -43,6 +62,8 @@ public class Player {
         boolean won_1 = checkWin();
 
         if (won_1) {
+            anyPlayerWon.set(true);
+            winningPlayerNumber.set(playerNumber);
             playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
             return true;
         }
@@ -54,6 +75,8 @@ public class Player {
         playerWriter.write("player %d discards a %d to deck %d\n".formatted(playerNumber, cardDiscarded, discardDeck.getDeckNumber()));
 
         if (won_2) {
+            anyPlayerWon.set(true);
+            winningPlayerNumber.set(playerNumber);
             playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
             return true;
         }

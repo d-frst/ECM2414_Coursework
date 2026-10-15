@@ -48,3 +48,13 @@ Navigator: Andrew
 
 - Implemented sequential prototype for card game
 - Started implementation on file output for players
+
+# 15/10/2026
+Session duration: 1.5h
+
+Driver: Andrew
+Navigator: Dorian
+
+- Started implementing threads
+
+

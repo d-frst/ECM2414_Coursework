@@ -1,5 +1,4 @@
 import java.io.*;
-// TODO: finish up player output (initial hand, final hand), make players threaded
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,10 +32,14 @@ public class Player implements Runnable{
                 System.out.println(e);
             }
         }
+        try{writeOutput();}
+        catch(IOException e) {
+            System.out.println(e);
+        }
     }
 
     public void writeStartingHand() throws IOException {
-        playerWriter.write("player 1 initial hand %s".formatted(playerDeck.printCards()));
+        playerWriter.write("player 1 initial hand %s\n".formatted(playerDeck.printCards()));
     }
 
     public int getPlayerNumber() {

@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.IOException;
+import java.util.concurrent.locks.*;
 
 public class CardGame {
     private int numPlayers;
@@ -9,6 +10,7 @@ public class CardGame {
     private ArrayList<TableDeck> tableDecks = new ArrayList<TableDeck>();
     private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
     private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
+    private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
 
     
     public CardGame(int numPlayers) {
@@ -26,12 +28,22 @@ public class CardGame {
 
         ArrayList<Player> players = new ArrayList<Player>();
 
+        // make locks for table decks
+        for (int i = 0; i < numPlayers; i++) {
+            tableDeckLocks.add(new ReentrantLock(true));
+        }
 
         // generate players
         for (int i = 0; i < numPlayers; i++) {
             try {
-                players.add(new Player(i + 1, anyPlayerWon, winningPlayerNumber));   
-            } catch (IOException e) {
+                players.add(new Player(
+                    i + 1, 
+                    anyPlayerWon, 
+                    winningPlayerNumber, 
+                    tableDeckLocks.get(i), 
+                    tableDeckLocks.get((i + 1) % numPlayers)));   
+            }
+            catch (IOException e) {
                 System.out.println("Error creating a new player");
                 return -1;
             }
@@ -60,6 +72,8 @@ public class CardGame {
             currentDeck.discardCard(cardtoAdd);
             currentDeckNumber = (currentDeckNumber + 1) % numPlayers;
         }
+
+
 
         // link decks to players
         for (Player player : players) {

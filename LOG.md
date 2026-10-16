@@ -67,4 +67,10 @@ Navigator: Andrew
 - Working on thread safety and correct end game behaviour
 
 
+# 16/10/2026
+Session duration: start 16:15
 
+Driver: Andrew
+Navigator: Dorian
+
+- Planned for making threads safe

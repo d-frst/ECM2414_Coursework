@@ -1,7 +1,9 @@
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import java.util.concurrent.locks.*;
+import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
 public class Player implements Runnable{
     private int playerNumber;
@@ -12,14 +14,18 @@ public class Player implements Runnable{
     FileWriter playerWriter;
     private AtomicBoolean anyPlayerWon;
     private AtomicInteger winningPlayerNumber;
+    private Lock drawLock;
+    private Lock discardLock;
 
-    public Player(int playerNumber, AtomicBoolean anyPlayerWon, AtomicInteger winningPlayerNumber) throws IOException{
+    public Player(int playerNumber, AtomicBoolean anyPlayerWon, AtomicInteger winningPlayerNumber, Lock drawLock, Lock discardLock) throws IOException{
         this.playerNumber = playerNumber;
         this.anyPlayerWon = anyPlayerWon;
         this.winningPlayerNumber = winningPlayerNumber;
         String filename = "player%d_output.txt".formatted(playerNumber);
         playerActionsFile = new File(filename);
-        playerWriter = new FileWriter(filename, true);
+        playerWriter = new FileWriter(filename, false);
+        this.drawLock = drawLock;
+        this.discardLock = discardLock;
     }
 
     @Override 
@@ -70,9 +76,17 @@ public class Player implements Runnable{
             playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
             return true;
         }
+        
+        // check locks
+        acquireLocks(drawLock, discardLock);
+        
 
         int cardDrawn = drawCard();
         int cardDiscarded = discardCard();
+
+        // unlock decks
+        drawLock.unlock();
+        discardLock.unlock();
         boolean won_2 = checkWin();
         playerWriter.write("player %d draws a %d from deck %d\n".formatted(playerNumber, cardDrawn, drawDeck.getDeckNumber()));
         playerWriter.write("player %d discards a %d to deck %d\n".formatted(playerNumber, cardDiscarded, discardDeck.getDeckNumber()));
@@ -85,6 +99,23 @@ public class Player implements Runnable{
         }
 
         return false;
+    }
+    private void acquireLocks(Lock drawLock, Lock discardLock){
+        boolean drawLockAcquired = false;
+        boolean discardLockAcquired = false;
+
+        // random number generator code
+        Random r = new Random();
+
+        
+        while(!drawLockAcquired && !discardLockAcquired) {
+            try {
+                drawLockAcquired = drawLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
+                discardLockAcquired = discardLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
+            }
+            catch (InterruptedException e) {}
+        }
+        
     }
 
     public int discardCard() {

@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-// TODO: output hand when game ends
 public class PlayerDeck {
     private ArrayList<Card> cards = new ArrayList<Card>();
 
@@ -12,16 +11,22 @@ public class PlayerDeck {
 
     public Card removeCard(int playerNumber) {
         // collect indices cards of non-preferred denomination
-        ArrayList<Integer> nonPreferredCards = new ArrayList<Integer>();
-        for (int i = 0; i < cards.size(); i++) {
-            Card current = cards.get(i);
-            if (current.getValue() != playerNumber) {
-                nonPreferredCards.add(i);
+        if (!cards.isEmpty()) {
+            ArrayList<Integer> nonPreferredCards = new ArrayList<Integer>();
+            for (int i = 0; i < cards.size(); i++) {
+                Card current = cards.get(i);
+                if (current.getValue() != playerNumber) {
+                    nonPreferredCards.add(i);
+                }
             }
+
+            int indexToRemove = getRandomIndex(nonPreferredCards);
+            return cards.remove(indexToRemove);
+            
         }
 
-        int indexToRemove = getRandomIndex(nonPreferredCards);
-        return cards.remove(indexToRemove);
+        return null;
+        
     }
 
     public int getRandomIndex(ArrayList<Integer> nonPreferredCards) {

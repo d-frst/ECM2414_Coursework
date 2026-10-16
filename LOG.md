@@ -74,3 +74,15 @@ Driver: Andrew
 Navigator: Dorian
 
 - Planned for making threads safe
+- Implement beginnings of locks
+
+# 16/10/2026
+Session start: 17:30
+
+Driver: Dorian
+Navigator: Andrew
+
+- Go through and fix edge cases on lock releasing and win conditions
+- Fix edge cases with deck drawing and discarding
+- Finalise file output format
+- Terminal input

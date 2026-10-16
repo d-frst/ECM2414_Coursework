@@ -1,17 +1,16 @@
 import java.io.*;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.*;
-import java.util.concurrent.TimeUnit;
-import java.util.Random;
 
 public class Player implements Runnable{
     private int playerNumber;
     private PlayerDeck playerDeck = new PlayerDeck();
     private TableDeck drawDeck;
     private TableDeck discardDeck;
-    private File playerActionsFile;
-    FileWriter playerWriter;
+    private FileWriter playerWriter;
     private AtomicBoolean anyPlayerWon;
     private AtomicInteger winningPlayerNumber;
     private Lock drawLock;
@@ -22,7 +21,6 @@ public class Player implements Runnable{
         this.anyPlayerWon = anyPlayerWon;
         this.winningPlayerNumber = winningPlayerNumber;
         String filename = "player%d_output.txt".formatted(playerNumber);
-        playerActionsFile = new File(filename);
         playerWriter = new FileWriter(filename, false);
         this.drawLock = drawLock;
         this.discardLock = discardLock;
@@ -38,14 +36,21 @@ public class Player implements Runnable{
                 System.out.println(e);
             }
         }
-        try{writeOutput();}
+        try{writeFinalState(); writeOutput();}
         catch(IOException e) {
             System.out.println(e);
         }
     }
 
-    public void writeStartingHand() throws IOException {
-        playerWriter.write("player 1 initial hand %s\n".formatted(playerDeck.printCards()));
+    private void writeStartingHand() throws IOException {
+        playerWriter.write("player %d initial hand %s\n".formatted(playerNumber, playerDeck.printCards()));
+    }
+
+    private void writeFinalState() throws IOException {
+        if (winningPlayerNumber.get() != playerNumber) {
+            playerWriter.write("player %d has informed player %d that player %d has won\n".formatted(winningPlayerNumber.get(), playerNumber, winningPlayerNumber.get()));
+        }
+        playerWriter.write("player %d exits\nplayer %d hand: %s".formatted(playerNumber, playerNumber, playerDeck.printCards()));
     }
 
     public int getPlayerNumber() {
@@ -57,71 +62,103 @@ public class Player implements Runnable{
         playerDeck.addCard(card);
     }
 
-    public int drawCard() {
+    private int drawCard() {
         Card card = drawDeck.drawCard();
-        playerDeck.addCard(card);
-        return card.getValue();
+        if (card != null) {
+            playerDeck.addCard(card);
+            return card.getValue();
+        }
+        return -1;
     }
 
-    public boolean checkWin() {
+    private boolean checkWin() {
         return playerDeck.cardsMatch();
     }
 
-    public boolean play() throws IOException {
+    private void play() throws IOException {
+        if (anyPlayerWon.get()) return;
+
         boolean won_1 = checkWin();
 
         if (won_1) {
             anyPlayerWon.set(true);
             winningPlayerNumber.set(playerNumber);
-            playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
-            return true;
+            playerWriter.write("player %d wins\n".formatted(playerNumber));
+            return;
         }
         
         // check locks
-        acquireLocks(drawLock, discardLock);
-        
+        int result = acquireLocks(drawLock, discardLock);
+        if (result == 0) {
 
-        int cardDrawn = drawCard();
-        int cardDiscarded = discardCard();
+            if (anyPlayerWon.get()) return;
 
-        // unlock decks
-        drawLock.unlock();
-        discardLock.unlock();
-        boolean won_2 = checkWin();
-        playerWriter.write("player %d draws a %d from deck %d\n".formatted(playerNumber, cardDrawn, drawDeck.getDeckNumber()));
-        playerWriter.write("player %d discards a %d to deck %d\n".formatted(playerNumber, cardDiscarded, discardDeck.getDeckNumber()));
+            // cardDrawn or cardDiscarded being -1 means failure to perform the operation when one or both decks are empty
+            int cardDrawn = drawCard();
+            int cardDiscarded = -1;
+            // don't bother discarding if a card couldn't be drawn
+            if (cardDrawn != -1) {
+                cardDiscarded = discardCard();
+            }
 
-        if (won_2) {
-            anyPlayerWon.set(true);
-            winningPlayerNumber.set(playerNumber);
-            playerWriter.write("player %d wins\nplayer %d exits".formatted(playerNumber, playerNumber));
-            return true;
+            // unlock decks
+            drawLock.unlock();
+            discardLock.unlock();
+
+            if (anyPlayerWon.get()) return;
+            boolean won_2 = checkWin();
+            if (cardDrawn != -1 && cardDiscarded != -1) {
+                playerWriter.write("player %d draws a %d from deck %d\n".formatted(playerNumber, cardDrawn, drawDeck.getDeckNumber()));
+                playerWriter.write("player %d discards a %d to deck %d\n".formatted(playerNumber, cardDiscarded, discardDeck.getDeckNumber()));   
+            }
+
+            if (won_2) {
+                anyPlayerWon.set(true);
+                winningPlayerNumber.set(playerNumber);
+                playerWriter.write("player %d wins\n".formatted(playerNumber));
+            }
         }
-
-        return false;
+        
     }
-    private void acquireLocks(Lock drawLock, Lock discardLock){
+
+    private int acquireLocks(Lock drawLock, Lock discardLock){
         boolean drawLockAcquired = false;
         boolean discardLockAcquired = false;
 
         // random number generator code
         Random r = new Random();
 
-        
-        while(!drawLockAcquired && !discardLockAcquired) {
+        // important to not attempt getting a lock if someone has won already
+        while(!(drawLockAcquired && discardLockAcquired) && !anyPlayerWon.get()) {
             try {
                 drawLockAcquired = drawLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
                 discardLockAcquired = discardLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
             }
             catch (InterruptedException e) {}
         }
+
+        // another player wins while trying to get a lock
+        if (anyPlayerWon.get()) {
+            if (drawLockAcquired) {
+                drawLock.unlock();
+            }
+            if (discardLockAcquired) {
+                discardLock.unlock();
+            }
+            return -1;
+        }
+
+        return 0;
         
     }
 
-    public int discardCard() {
+    private int discardCard() {
         Card card = playerDeck.removeCard(playerNumber);
-        discardDeck.discardCard(card);
-        return card.getValue();
+        if (card != null) {
+            discardDeck.discardCard(card);
+            return card.getValue();
+        }
+        return -1;
     }
 
     public void setDrawDeck(TableDeck deck) {
@@ -136,7 +173,7 @@ public class Player implements Runnable{
         playerDeck.printCards();
     }
 
-    public void writeOutput() throws IOException {
+    private void writeOutput() throws IOException {
         playerWriter.close();
     }
 

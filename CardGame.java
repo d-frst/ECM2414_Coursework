@@ -3,9 +3,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.IOException;
 import java.util.concurrent.locks.*;
+import java.util.Scanner;
 
 public class CardGame {
     private int numPlayers;
+    private String deckPath;
     private ArrayList<Thread> playerThreads = new ArrayList<Thread>();
     private ArrayList<TableDeck> tableDecks = new ArrayList<TableDeck>();
     private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
@@ -13,18 +15,15 @@ public class CardGame {
     private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
 
     
-    public CardGame(int numPlayers) {
+    public CardGame(int numPlayers, String deckPath) {
         this.numPlayers = numPlayers;
+        this.deckPath = deckPath;
         int result = initGame();
-        System.out.println(result);
     }
 
     public int initGame() {
         CardDeck deck = new CardDeck();
-
-        // generate cards
-        deck.readCardFile(numPlayers);
-
+        deck.readCardFile(numPlayers, deckPath);
 
         ArrayList<Player> players = new ArrayList<Player>();
 
@@ -61,7 +60,13 @@ public class CardGame {
 
         // generate TableDecks
         for (int i = 0; i < numPlayers; i++) {
-            tableDecks.add(new TableDeck(i + 1));
+            try {
+                tableDecks.add(new TableDeck(i + 1));
+            } catch (IOException e) {
+                System.out.println("Error making a table deck");
+                return -1;
+            }
+            
         }
 
         // add cards to table decks
@@ -92,29 +97,45 @@ public class CardGame {
         return 0;
     }
 
+    public int getWinner() {
+        return winningPlayerNumber.get();
+    }
+
     public void play() throws IOException {
         // Start player threads
         for (Thread thread : playerThreads) {
             thread.start();
         }
+
+        // wait for all players to finish
+        for (Thread thread : playerThreads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {}
+        }
+
+        // output final table deck state
+        for (TableDeck deck : tableDecks) {
+            try {
+                deck.write();
+            } catch (IOException e) {
+            }
+        }
     }
 
-    // public void debugPrint() {
-    //     for (Player player : playerThreads) {
-    //         System.out.println("player %d deck".formatted(player.getPlayerNumber()));
-    //         player.printPlayerDeck();
-    //     }
-    //     for (TableDeck deck : tableDecks) {
-    //         System.out.println("table deck");
-    //         deck.printCards();
-    //     }
-    // }
-
     public static void main(String[] args) throws IOException {
+        Scanner terminalInput = new Scanner(System.in);
+        System.out.println("Please enter the number of players:");
+        int numPlayers = Integer.parseInt(terminalInput.nextLine());
+        System.out.println("Please enter the location of the pack to load:");
+        String deckPath = terminalInput.nextLine();
+        terminalInput.close();
+
         CardDeck deck = new CardDeck();
-        deck.generateCardFile(2);
-        CardGame game = new CardGame(2);
+        // deck.readCardFile(numPlayers, deckPath);
+        deck.generateCardFile(numPlayers);
+        CardGame game = new CardGame(numPlayers, deckPath);
         game.play();
-        //game.debugPrint();
+        System.out.println("player %d wins".formatted(game.getWinner()));
     }
 }

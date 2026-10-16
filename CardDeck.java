@@ -20,7 +20,7 @@ public class CardDeck {
 
     public void generateCardFile(int numPlayers) {
         // Open file
-        try (FileWriter myWriter = new FileWriter("cards.txt", true)) {
+        try (FileWriter myWriter = new FileWriter("cards.txt")) {
             createDeck(numPlayers);
             for (int i = 0 ; i < cards.size(); i++) {
                 Card currentCard = cards.get(i);
@@ -36,9 +36,8 @@ public class CardDeck {
         } 
     }
 
-    public void readCardFile(int numPlayers) {
-        // Open cards.txt
-        File cardsFile = new File("cards.txt");
+    public void readCardFile(int numPlayers, String path) {
+        File cardsFile = new File(path);
         try (Scanner myReader = new Scanner(cardsFile)) {
             // read over whole file
             while (myReader.hasNextLine()) {

@@ -1,3 +1,4 @@
+package cardgame;
 public class Card {
     private int value;
    

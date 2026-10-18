@@ -1,9 +1,12 @@
+package cardgame;
 import java.io.*;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.*;
+
+
 
 public class Player implements Runnable{
     private int playerNumber;
@@ -81,9 +84,7 @@ public class Player implements Runnable{
         boolean won_1 = checkWin();
 
         if (won_1) {
-            anyPlayerWon.set(true);
-            winningPlayerNumber.set(playerNumber);
-            playerWriter.write("player %d wins\n".formatted(playerNumber));
+            playerWin();
             return;
         }
         
@@ -113,12 +114,16 @@ public class Player implements Runnable{
             }
 
             if (won_2) {
-                anyPlayerWon.set(true);
-                winningPlayerNumber.set(playerNumber);
-                playerWriter.write("player %d wins\n".formatted(playerNumber));
+                playerWin();
             }
         }
         
+    }
+
+    private void playerWin() throws IOException {
+        anyPlayerWon.set(true);
+        winningPlayerNumber.set(playerNumber);
+        playerWriter.write("player %d wins\n".formatted(playerNumber));
     }
 
     private int acquireLocks(Lock drawLock, Lock discardLock){

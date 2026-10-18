@@ -1,8 +1,9 @@
+package cardgame;
 import java.util.ArrayList;
 import java.io.*;
 
 public class TableDeck {
-    private int deckNumber;
+    private final int deckNumber;
     private ArrayList<Card> cards = new ArrayList<Card>();
     private FileWriter deckWriter;
 

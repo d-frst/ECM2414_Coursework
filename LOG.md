@@ -50,7 +50,7 @@ Navigator: Andrew
 - Started implementation on file output for players
 
 # 15/10/2026
-Session duration: 1.5h
+Session duration: 1.5 hours
 
 Driver: Andrew
 Navigator: Dorian
@@ -67,8 +67,8 @@ Navigator: Andrew
 - Working on thread safety and correct end game behaviour
 
 
-# 16/10/2026
-Session duration: start 16:15
+# 16/10/2026 start(15:15)
+Session duration: 1 hour 15 mins
 
 Driver: Andrew
 Navigator: Dorian
@@ -76,8 +76,8 @@ Navigator: Dorian
 - Planned for making threads safe
 - Implement beginnings of locks
 
-# 16/10/2026
-Session start: 17:30
+# 16/10/2026 start(17:30)
+Session duration: 2 hours
 
 Driver: Dorian
 Navigator: Andrew
@@ -86,3 +86,9 @@ Navigator: Andrew
 - Fix edge cases with deck drawing and discarding
 - Finalise file output format
 - Terminal input
+
+# 18/10/2026
+Driver: Dorian
+Navigator: Andrew
+
+- 

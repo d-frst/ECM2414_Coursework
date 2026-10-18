@@ -64,7 +64,16 @@ public class CardDeck {
         return cards.size();
     }
 
-    public void printCards() {
-        System.out.println(cards);
+    public String printCards() {
+        String cardString = "";
+        for (Card card : cards) {
+            cardString += Integer.toString(card.getValue()) + " ";
+        }
+        return cardString;
+    }
+
+    // for testing
+    public void addCard(Card card) {
+         cards.add(card);
     }
 }

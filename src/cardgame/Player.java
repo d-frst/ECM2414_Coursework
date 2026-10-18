@@ -1,4 +1,4 @@
-package cardgame;
+package src.cardgame;
 import java.io.*;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;

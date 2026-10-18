@@ -1,4 +1,4 @@
-package cardgame;
+package src.cardgame;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,19 +1,21 @@
-package cardgame;
+package src.cardgame.tests;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import src.cardgame.CardDeck;
 
-public class PlayerTest {
+public class CardDeckTest {
 
-    private Player player;
+    private CardDeck cardDeck;
 
     @Before
     public void setUp() {
+        cardDeck = new CardDeck();
     }
 
     @Test
-    public void testPlayerInstantiation() {
+    public void test() {
         assertTrue("Player test placeholder", true);
     }
 }

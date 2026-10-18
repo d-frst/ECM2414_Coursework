@@ -1,4 +1,5 @@
-package cardgame;
+package src.cardgame;
+
 public class Card {
     private int value;
    

@@ -132,6 +132,10 @@ public class Player implements Runnable{
             try {
                 drawLockAcquired = drawLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
                 discardLockAcquired = discardLock.tryLock(r.nextInt(1000), TimeUnit.MILLISECONDS);
+                if (drawLockAcquired && !discardLockAcquired) {
+                    drawLock.unlock();
+                    drawLockAcquired = false;
+                }
             }
             catch (InterruptedException e) {}
         }

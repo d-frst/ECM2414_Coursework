@@ -1,10 +1,10 @@
-package src.cardgame.tests;
+package cardgame.tests;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import src.cardgame.PlayerDeck;
-import src.cardgame.Card;
+import cardgame.PlayerDeck;
+import cardgame.Card;
 
 public class PlayerDeckTest {
 

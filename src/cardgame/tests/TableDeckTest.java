@@ -1,10 +1,10 @@
-package src.cardgame.tests;
+package cardgame.tests;
 
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import src.cardgame.TableDeck;
-import src.cardgame.Card;
+import cardgame.TableDeck;
+import cardgame.Card;
 
 public class TableDeckTest {
 
@@ -22,5 +22,11 @@ public class TableDeckTest {
     public void testDeckInstantiation() {
         assertEquals("2", tableDeck.getCards());
         assertEquals(1, tableDeck.getDeckNumber());
+    }
+
+    @Test
+    public void testDrawCard() {
+        tableDeck.drawCard();
+        assertEquals("", tableDeck.getCards());
     }
 }

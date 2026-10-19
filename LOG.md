@@ -88,8 +88,9 @@ Navigator: Andrew
 - Terminal input
 
 # 18/10/2026
-Driver: Dorian
-Navigator: Andrew
+Session duration: 2 hours
+Driver: Andrew
+Navigator: Dorian
 
 - created test files and folder
 - started work on first tests

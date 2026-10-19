@@ -121,9 +121,11 @@ public class Player implements Runnable{
     }
 
     private void playerWin() throws IOException {
-        anyPlayerWon.set(true);
-        winningPlayerNumber.set(playerNumber);
-        playerWriter.write("player %d wins\n".formatted(playerNumber));
+        if (!anyPlayerWon.get()) {
+            anyPlayerWon.set(true);
+            winningPlayerNumber.set(playerNumber);
+            playerWriter.write("player %d wins\n".formatted(playerNumber));
+        }
     }
 
     private int acquireLocks(Lock drawLock, Lock discardLock){
@@ -174,8 +176,8 @@ public class Player implements Runnable{
         discardDeck = deck;
     }
 
-    public void printPlayerDeck() {
-        playerDeck.printCards();
+    public String printPlayerDeck() {
+        return playerDeck.printCards();
     }
 
     private void writeOutput() throws IOException {

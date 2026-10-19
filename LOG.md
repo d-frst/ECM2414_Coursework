@@ -13,6 +13,7 @@ Navigator: Andrew
 Session duration: 1.5 hours
 
 Driver: Andrew
+
 Navigator: Dorian
 
 - Made playerdeck class
@@ -23,6 +24,7 @@ Navigator: Dorian
 Session duration: 1.5 hours
 
 Driver: Dorian
+
 Navigator: Andrew
 
 - Implement PlayerDeck add and remove card methods
@@ -35,6 +37,7 @@ Navigator: Andrew
 Session duration: 1.5 hours
 
 Driver: Andrew
+
 Navigator: Dorian
 
 - made generate card file and read card file functions
@@ -44,6 +47,7 @@ Navigator: Dorian
 Session duration: 1 hour 15 mins
 
 Driver: Dorian
+
 Navigator: Andrew
 
 - Implemented sequential prototype for card game
@@ -53,6 +57,7 @@ Navigator: Andrew
 Session duration: 1.5 hours
 
 Driver: Andrew
+
 Navigator: Dorian
 
 - Started implementing threads
@@ -61,6 +66,7 @@ Navigator: Dorian
 Session duration: 2 hours
 
 Driver: Dorian
+
 Navigator: Andrew
 
 - Implemented threading
@@ -71,6 +77,7 @@ Navigator: Andrew
 Session duration: 1 hour 15 mins
 
 Driver: Andrew
+
 Navigator: Dorian
 
 - Planned for making threads safe
@@ -80,6 +87,7 @@ Navigator: Dorian
 Session duration: 2 hours
 
 Driver: Dorian
+
 Navigator: Andrew
 
 - Go through and fix edge cases on lock releasing and win conditions
@@ -89,8 +97,22 @@ Navigator: Andrew
 
 # 18/10/2026
 Session duration: 2 hours
+
 Driver: Andrew
+
 Navigator: Dorian
 
 - created test files and folder
 - started work on first tests
+
+# 19/10/2026
+Start: 16:00
+
+Session duration: 1 hour 15 minutes
+
+Driver: Dorian
+
+Navigator: Andrew
+
+- fixed winning check bug
+- add card test

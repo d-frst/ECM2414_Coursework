@@ -65,15 +65,6 @@ public class Player implements Runnable{
         playerDeck.addCard(card);
     }
 
-    private int drawCard() {
-        Card card = drawDeck.drawCard();
-        if (card != null) {
-            playerDeck.addCard(card);
-            return card.getValue();
-        }
-        return -1;
-    }
-
     private boolean checkWin() {
         return playerDeck.cardsMatch();
     }
@@ -97,6 +88,7 @@ public class Player implements Runnable{
             // cardDrawn or cardDiscarded being -1 means failure to perform the operation when one or both decks are empty
             int cardDrawn = drawCard();
             int cardDiscarded = -1;
+
             // don't bother discarding if a card couldn't be drawn
             if (cardDrawn != -1) {
                 cardDiscarded = discardCard();
@@ -158,8 +150,17 @@ public class Player implements Runnable{
         return 0;
         
     }
+    
+    public int drawCard() {
+        Card card = drawDeck.drawCard();
+        if (card != null) {
+            playerDeck.addCard(card);
+            return card.getValue();
+        }
+        return -1;
+    }
 
-    private int discardCard() {
+    public int discardCard() {
         Card card = playerDeck.removeCard(playerNumber);
         if (card != null) {
             discardDeck.discardCard(card);

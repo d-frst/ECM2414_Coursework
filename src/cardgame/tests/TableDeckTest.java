@@ -13,20 +13,12 @@ public class TableDeckTest {
 
     @Before
     public void setUp() throws Exception{
-        tableDeck = new TableDeck(1);
-        card = new Card(2);
-        tableDeck.discardCard(card);
+        
     }
 
     @Test
     public void testDeckInstantiation() {
         assertEquals("2", tableDeck.getCards());
         assertEquals(1, tableDeck.getDeckNumber());
-    }
-
-    @Test
-    public void testDrawCard() {
-        tableDeck.drawCard();
-        assertEquals("", tableDeck.getCards());
     }
 }

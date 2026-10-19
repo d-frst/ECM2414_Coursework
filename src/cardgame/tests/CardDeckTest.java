@@ -20,6 +20,7 @@ public class CardDeckTest {
 
     @Test
     public void testDeckInstantiation() {
+        assertEquals(1, cardDeck.getDeckSize());
         assertEquals("2 ", cardDeck.printCards());
     }
 }

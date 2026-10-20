@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import cardgame.CardGame;
@@ -43,4 +44,21 @@ public class CardGameTest {
         // Test 8 cards in system at end of game
         assertEquals(8, cardgame.getTableDeckSizes().stream().mapToInt(Integer::intValue).sum());
     }
+
+    // Test player output files and the deck files were created
+    @Test
+    public void testFilesCraeted() throws IOException{
+        cardgame.play();
+
+        File playerFile1 = new File("player" + 1 + "_output.txt");
+        assertTrue(playerFile1.exists());
+        File playerFile2 = new File("player" + 2 + "_output.txt");
+        assertTrue(playerFile2.exists());
+
+        File deckFile1 = new File("deck1_output.txt");
+        File deckFile2 = new File("deck2_output.txt");
+        assertTrue(deckFile1.exists());
+        assertTrue(deckFile2.exists());
+    }
+
 }

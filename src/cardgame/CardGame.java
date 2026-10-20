@@ -1,5 +1,6 @@
 package cardgame;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.IOException;
@@ -14,7 +15,6 @@ public class CardGame {
     private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
     private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
     private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
-
     
     public CardGame(int numPlayers, String deckPath) {
         this.numPlayers = numPlayers;
@@ -47,7 +47,6 @@ public class CardGame {
                 System.out.println("Error creating a new player");
                 return -1;
             }
-            
         }
         
         // distribute cards to players
@@ -78,8 +77,6 @@ public class CardGame {
             currentDeck.discardCard(cardtoAdd);
             currentDeckNumber = (currentDeckNumber + 1) % numPlayers;
         }
-
-
 
         // link decks to players
         for (Player player : players) {
@@ -138,5 +135,20 @@ public class CardGame {
         CardGame game = new CardGame(numPlayers, deckPath);
         game.play();
         System.out.println("player %d wins".formatted(game.getWinner()));
+    }
+
+    // For testing
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+    public int getNumTableDecks() {
+        return tableDecks.size();
+    }
+    public List<Integer> getTableDeckSizes() {
+        ArrayList<Integer> lengths = new ArrayList<>();
+        for (TableDeck deck : tableDecks) {
+            lengths.add(deck.getNumCards());
+        }
+        return lengths;
     }
 }

@@ -40,13 +40,16 @@ public class TableDeck {
         for (Card card : cards) {
             str += "%d ".formatted(card.getValue());
         }
-
         return str.strip();
-
     }
 
     public void write() throws IOException {
         deckWriter.write("deck%d contents: %s".formatted(deckNumber, getCards()));
         deckWriter.close();
+    }
+
+    // for testing
+    public int getNumCards() {
+        return cards.size();
     }
 }

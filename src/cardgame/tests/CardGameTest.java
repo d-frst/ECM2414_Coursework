@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -26,9 +27,17 @@ public class CardGameTest {
 
     @Before
     public void setUp() {
-        new cardgame = CardGame(2, )
+        cardgame = new CardGame(2, "testCards1.txt");
     }
 
-    @Test 
-    
+    @Test
+    public void testGameInstantiation() {
+        // Test 2 players have been made
+        assertEquals(2, cardgame.getNumPlayers());
+        // Test 2 decks have been made
+        assertEquals(2, cardgame.getNumTableDecks())
+        // Test decks have 4 cards each
+        // Fancy code beacuse java doesn't like the list as a parameter
+        assertEquals(Arrays.asList(4, 4), cardgame.getTableDeckSizes());
+    }
 }

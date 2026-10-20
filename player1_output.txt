@@ -1,4 +1,0 @@
-player 1 initial hand 2 2 2 2 
-player 1 wins
-player 1 exits
-player 1 hand: 2 2 2 2 

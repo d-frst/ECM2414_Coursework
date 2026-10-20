@@ -15,6 +15,7 @@ public class CardGame {
     private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
     private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
     private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
+    private ArrayList<Player> players = new ArrayList<Player>();
     
     public CardGame(int numPlayers, String deckPath) {
         this.numPlayers = numPlayers;
@@ -26,7 +27,7 @@ public class CardGame {
         CardDeck deck = new CardDeck();
         deck.readCardFile(numPlayers, deckPath);
 
-        ArrayList<Player> players = new ArrayList<Player>();
+        this.players = new ArrayList<Player>();
 
         // make locks for table decks
         for (int i = 0; i < numPlayers; i++) {
@@ -150,6 +151,18 @@ public class CardGame {
         ArrayList<Integer> lengths = new ArrayList<>();
         for (TableDeck deck : tableDecks) {
             lengths.add(deck.getNumCards());
+        }
+        return lengths;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public List<Integer> getPlayerDeckSizes() {
+        ArrayList<Integer> lengths = new ArrayList<>();
+        for (Player player : players) {
+            lengths.add(player.getNumCards());
         }
         return lengths;
     }

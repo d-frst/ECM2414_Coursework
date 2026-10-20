@@ -4,27 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
 import cardgame.CardGame;
-import cardgame.Card;
-import cardgame.Player;
-import cardgame.TableDeck;
+
+// Runs a normal game with 2 players to check instantiation and invarients
 
 public class CardGameTest {
     private CardGame cardgame;
-    private String deckPath;
-    private ArrayList<Thread> playerThreads = new ArrayList<Thread>();
-    private ArrayList<TableDeck> tableDecks = new ArrayList<TableDeck>();
-    private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
-    private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
-    private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
-
     @Before
-    public void setUp() {
+    public void setUp(){
         cardgame = new CardGame(2, "testCards1.txt");
     }
 
@@ -33,9 +22,25 @@ public class CardGameTest {
         // Test 2 players have been made
         assertEquals(2, cardgame.getNumPlayers());
         // Test 2 decks have been made
-        assertEquals(2, cardgame.getNumTableDecks())
+        assertEquals(2, cardgame.getNumTableDecks());
+        
+        
         // Test decks have 4 cards each
         // Fancy code beacuse java doesn't like the list as a parameter
         assertEquals(Arrays.asList(4, 4), cardgame.getTableDeckSizes());
+        // Test each player has 4 cards at start
+        assertEquals(Arrays.asList(4, 4), cardgame.getPlayerDeckSizes());
+        // Test 8 cards in tabledecks at start of game
+        assertEquals(8, cardgame.getTableDeckSizes().stream().mapToInt(Integer::intValue).sum());
+    }
+
+    // Test Invariants
+    @Test(timeout = 5000)
+    public void testInvarients() throws IOException{
+        cardgame.play();
+        // Test each player has 4 cards at end
+        assertEquals(Arrays.asList(4, 4), cardgame.getPlayerDeckSizes());
+        // Test 8 cards in system at end of game
+        assertEquals(8, cardgame.getTableDeckSizes().stream().mapToInt(Integer::intValue).sum());
     }
 }

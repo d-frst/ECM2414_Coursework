@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import cardgame.CardGame;
+import java.util.Arrays;
 
 
 /*
@@ -26,9 +27,14 @@ public class MockGameTest1 {
         cardgame.play();
     }
 
-    @Test
+    @Test(timeout = 3000)
     public void testPlayerOneWins() throws IOException{
+        // Ensure only 1 player wins
         assertEquals(1, cardgame.getWinner());
         assertNotEquals(2, cardgame.getWinner());
+
+        // Check table decks to prove no cards have been drawn and players stilll have 4 cards
+        assertEquals(Arrays.asList(4, 4), cardgame.getTableDeckSizes());
+        assertEquals(Arrays.asList(4, 4), cardgame.getPlayerDeckSizes());
     }
 }

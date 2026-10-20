@@ -54,4 +54,9 @@ public class PlayerDeck {
         }
         return cardString;
     }
+    // for testing
+
+    public int getNumCards() {
+        return cards.size();
+    }
 }

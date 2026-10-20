@@ -188,5 +188,9 @@ public class Player implements Runnable{
     private void writeOutput() throws IOException {
         playerWriter.close();
     }
+    // for testing
+    public int getNumCards() {
+        return playerDeck.getNumCards();
+    }
 
 }

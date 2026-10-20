@@ -141,9 +141,11 @@ public class CardGame {
     public int getNumPlayers() {
         return numPlayers;
     }
+    
     public int getNumTableDecks() {
         return tableDecks.size();
     }
+
     public List<Integer> getTableDeckSizes() {
         ArrayList<Integer> lengths = new ArrayList<>();
         for (TableDeck deck : tableDecks) {

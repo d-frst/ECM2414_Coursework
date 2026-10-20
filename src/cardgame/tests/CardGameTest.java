@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
-
 import cardgame.CardGame;
 import cardgame.Card;
 import cardgame.Player;
@@ -23,7 +22,6 @@ public class CardGameTest {
     private AtomicBoolean anyPlayerWon = new AtomicBoolean(false);
     private AtomicInteger winningPlayerNumber = new AtomicInteger(0);
     private ArrayList<Lock> tableDeckLocks = new ArrayList<Lock>();
-
 
     @Before
     public void setUp() {

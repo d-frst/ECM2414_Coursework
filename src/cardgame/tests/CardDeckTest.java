@@ -13,6 +13,7 @@ public class CardDeckTest {
 
     @Before
     public void setUp() {
+        // Create a cardDeck and add a card to it
         cardDeck = new CardDeck();
         card = new Card(2);
         cardDeck.addCard(card);

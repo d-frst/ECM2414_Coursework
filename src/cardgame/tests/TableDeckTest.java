@@ -18,6 +18,7 @@ public class TableDeckTest {
 
     @Test
     public void testDeckInstantiation() {
+        // Create a tabledeck and chack you can add a card
         assertEquals("2", tableDeck.getCards());
         assertEquals(1, tableDeck.getDeckNumber());
     }

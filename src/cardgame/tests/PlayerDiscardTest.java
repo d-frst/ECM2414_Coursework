@@ -39,6 +39,7 @@ public class PlayerDiscardTest {
 
     @Test 
     public void testDiscardBehaviour() {
+        // Create player's hand
         player1.addToPlayerDeck(new Card(1));
         player1.addToPlayerDeck(new Card(1));
         player1.addToPlayerDeck(new Card(1));

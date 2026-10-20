@@ -13,6 +13,7 @@ public class PlayerDeckTest {
 
     @Before
     public void setUp() {
+        // Test if you can create a player deck and add a card to it
         playerDeck = new PlayerDeck();
         card = new Card(2);
         playerDeck.addCard(card);

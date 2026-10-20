@@ -10,6 +10,7 @@ public class CardTest {
 
     @Before
     public void setUp() {
+        // Test you can create a card
         card = new Card(2);
     }
 

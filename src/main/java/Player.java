@@ -136,6 +136,10 @@ public class Player implements Runnable{
                     drawLock.unlock();
                     drawLockAcquired = false;
                 }
+                else if (discardLockAcquired && !drawLockAcquired) {
+                    discardLock.unlock();
+                    discardLockAcquired = false;
+                }
             }
             catch (InterruptedException e) {}
         }

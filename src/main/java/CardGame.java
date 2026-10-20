@@ -20,10 +20,10 @@ public class CardGame {
     public CardGame(int numPlayers, String deckPath) {
         this.numPlayers = numPlayers;
         this.deckPath = deckPath;
-        int result = initGame();
+        initGame();
     }
 
-    public int initGame() {
+    public void initGame() {
         CardDeck deck = new CardDeck();
         deck.readCardFile(numPlayers, deckPath);
 
@@ -46,7 +46,7 @@ public class CardGame {
             }
             catch (IOException e) {
                 System.out.println("Error creating a new player");
-                return -1;
+                return;
             }
         }
         
@@ -65,7 +65,7 @@ public class CardGame {
                 tableDecks.add(new TableDeck(i + 1));
             } catch (IOException e) {
                 System.out.println("Error making a table deck");
-                return -1;
+                return;
             }
             
         }
@@ -93,7 +93,7 @@ public class CardGame {
             playerThreads.add(playerThread);
         }
 
-        return 0;
+        return;
     }
 
     public int getWinner() {
